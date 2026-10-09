@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
-import { Loader2, Flame, Sparkles, Star, ChevronRight } from 'lucide-react';
-import { cn } from "@/lib/utils";
+import { Flame, ChevronRight } from 'lucide-react';
 
 
 

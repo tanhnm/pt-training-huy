@@ -8,16 +8,10 @@ import {
   Save,
   Camera,
   Bell,
-  CreditCard,
-  CheckCircle,
-  AlertCircle,
   Key,
   Trash2,
   AlertTriangle,
   MonitorSmartphone,
-  LayoutDashboard,
-  Shield,
-  Plug,
   Download,
   Upload,
   RefreshCw,
@@ -25,8 +19,7 @@ import {
   Sun,
   Moon,
   Sparkles,
-  ExternalLink,
-  ShieldCheck } from
+  ExternalLink } from
 "lucide-react";
 import { storageEngine } from "@/lib/storageEngine";
 import { getGeminiApiKey, setGeminiApiKey, getGeminiModel, setGeminiModel } from "@/lib/aiService";

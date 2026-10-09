@@ -38,10 +38,9 @@ import {
 "@/components/ui/alert-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Plus, BookOpen, Search, Edit, Trash2, MoreVertical, Users, Upload, Loader2, ExternalLink, Send, ChefHat, Clock, Flame, Download, FileText, Eye } from "lucide-react";
+import { Plus, BookOpen, Search, Edit, Trash2, MoreVertical, Users, Loader2, ExternalLink, Send, Clock, Flame, Download, FileText, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import QuickAddResources from "@/components/resources/QuickAddResources";
-import SearchSources from "@/components/resources/SearchSources";
 import RecipeImporter from "@/components/resources/RecipeImporter";
 import NASMExerciseLibrary from "@/components/resources/NASMExerciseLibrary";
 import { toast } from "sonner";

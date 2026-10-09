@@ -7,7 +7,6 @@ import { useLocation, Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import MealPlanForm from "../components/meals/MealPlanForm";
 import ShoppingListView from "../components/meals/ShoppingListView";
-import AIMealPlanGenerator from "@/components/ai/AIMealPlanGenerator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -45,8 +44,6 @@ import {
   Send,
   ShoppingCart,
   Play,
-  Pause,
-  Archive,
   FileDown,
   Sparkles,
   Eye

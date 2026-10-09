@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -9,7 +9,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
   ArrowLeft,
-  Zap,
   Dumbbell,
   Apple,
   TrendingUp,
@@ -21,8 +20,6 @@ import {
   Trash2,
   MoreVertical,
   FileText,
-  Target,
-  Sparkles,
   Play,
   Clock,
   CheckCircle,
@@ -38,7 +35,6 @@ import MealPlanDetailModal from "@/components/meals/MealPlanDetailModal";
 import CalorieLogDetailModal from "@/components/fitness/CalorieLogDetailModal";
 import WorkoutPlanDetailModal from "@/components/workouts/WorkoutPlanDetailModal";
 import OnboardingResponses from "@/components/onboarding/OnboardingResponses";
-import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { toast } from "sonner";
 import FitnessProgramForm from "@/components/fitness/FitnessProgramForm";
@@ -55,12 +51,9 @@ import ItemCompletionTracker from "@/components/ItemCompletionTracker";
 import ProgressChartForm from "@/components/forms/ProgressChartForm";
 import ParQForm from "@/components/forms/ParQForm";
 import ClientIntakeForm from "@/components/forms/ClientIntakeForm";
-import MedicalReleaseForm from "@/components/forms/MedicalReleaseForm";
 import MedicalReleaseFormPrintable from "@/components/forms/MedicalReleaseFormPrintable";
-import ReadinessAnalyzer from "@/components/analytics/ReadinessAnalyzer";
 import TrainerClientOnboarding from "@/components/clients/TrainerClientOnboarding";
 import ClientDocuments from "@/components/clients/ClientDocuments";
-import AIWorkoutGenerator from "@/components/ai/AIWorkoutGenerator";
 import AIRecipeGenerator from "@/components/ai/AIRecipeGenerator";
 import AIMealPlanGenerator from "@/components/ai/AIMealPlanGenerator";
 import { useUnitSystem } from "@/components/hooks/useUnitSystem";

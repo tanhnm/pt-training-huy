@@ -14,7 +14,6 @@ import {
   Trash2,
   Copy,
   Play,
-  Pause,
   CheckCircle,
   LayoutTemplate,
   Clock,
@@ -53,7 +52,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import WorkoutForm from "@/components/workouts/WorkoutForm";
 import AIWorkoutGenerator from "@/components/ai/AIWorkoutGenerator";
-import { cn } from "@/lib/utils";
 import EmptyState from "@/components/ui/empty-state";
 import { toast } from "sonner";
 
@@ -68,6 +66,12 @@ const difficultyStyles = {
   beginner: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30",
   intermediate: "bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30",
   advanced: "bg-purple-500/15 text-purple-600 dark:text-purple-400 border-purple-500/30"
+};
+
+const difficultyLabels = {
+  beginner: "Cơ bản",
+  intermediate: "Trung cấp",
+  advanced: "Nâng cao"
 };
 
 export default function Workouts() {

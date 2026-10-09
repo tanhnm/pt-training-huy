@@ -10,7 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {
   Heart,
   MessageCircle,
-  Upload,
   Image as ImageIcon,
   Trophy,
   Target,

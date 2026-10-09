@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useMutation } from "@tanstack/react-query";
 import { UNIT_SYSTEMS, getHeightUnit, getWeightUnit, convertHeight, convertWeight } from "../utils/unitConversion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import {
   CheckCircle2,
@@ -23,7 +22,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import confetti from "canvas-confetti";
-import { AlertCircle } from "lucide-react";
 
 // Beta keys are validated server-side at registration (see /api/auth/register).
 // They must never be listed in client code — the bundle is public.

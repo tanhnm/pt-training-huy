@@ -11,7 +11,6 @@ import { BookOpen, Search, ExternalLink, Play, FileText, Download, Users, Flame,
 import { cn } from "@/lib/utils";
 import NASMExerciseLibrary from "@/components/resources/NASMExerciseLibrary";
 import QuickAddResources from "@/components/resources/QuickAddResources";
-import SearchSources from "@/components/resources/SearchSources";
 import RecipeImporter from "@/components/resources/RecipeImporter";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";

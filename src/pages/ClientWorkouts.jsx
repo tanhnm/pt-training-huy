@@ -5,15 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
 } from "@/components/ui/dialog";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
@@ -23,8 +18,6 @@ import {
   CheckCircle2,
   Calendar,
   TrendingUp,
-  ChevronRight,
-  Clock,
   Award,
   Target,
   ChevronDown,
@@ -38,7 +31,6 @@ import VolumeChart from "@/components/analytics/VolumeChart";
 import WorkoutForm from "@/components/workouts/WorkoutForm";
 import { format } from "date-fns";
 import FormCheckAnalyzer from "@/components/workouts/FormCheckAnalyzer";
-import WorkoutMusicPlayer from "@/components/workouts/WorkoutMusicPlayer";
 import LiveWorkoutMode from "@/components/workouts/LiveWorkoutMode";
 
 function FitnessProgramCard({ program }) {

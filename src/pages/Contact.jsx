@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Menu, X, ArrowLeft, Mail, Phone, MessageCircle, Flame } from "lucide-react";
+import { Menu, X, Flame } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Contact() {

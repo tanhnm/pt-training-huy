@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
-  Sparkles, Send, MessageCircle, User, Loader2, Plus, MessageSquare, Copy, Zap,
-  CheckCircle2, AlertCircle, ChevronRight, Dumbbell, Utensils, TrendingUp, Calendar,
-  Key, Settings2, ExternalLink, FileDown, ShieldCheck, HelpCircle, RefreshCw, Trash2
+  Sparkles, Send, User, Loader2, Plus, MessageSquare, Zap, ChevronRight, Dumbbell, Utensils, TrendingUp, Calendar,
+  Key, ExternalLink, FileDown, ShieldCheck, Trash2
 } from "lucide-react";
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,

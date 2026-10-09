@@ -15,7 +15,6 @@ import {
   Phone, 
   Target,
   ArrowRight,
-  TrendingUp,
   Info
 } from "lucide-react";
 import { Button } from "@/components/ui/button";

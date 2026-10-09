@@ -9,9 +9,7 @@ import {
   Filter, 
   Users,
   Grid3X3,
-  List,
-  SlidersHorizontal,
-  Sheet
+  List
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

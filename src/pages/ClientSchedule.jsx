@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Calendar as CalendarIcon,
   Clock,
-  MapPin,
   User,
   CheckCircle2,
   XCircle,
@@ -17,7 +16,7 @@ import {
   Video } from
 "lucide-react";
 import VideoCallRoom from "@/components/video/VideoCallRoom";
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, isToday, isPast } from "date-fns";
+import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, isToday } from "date-fns";
 
 const sessionTypeColors = {
   personal_training: "bg-blue-100 text-blue-700 border-blue-200",

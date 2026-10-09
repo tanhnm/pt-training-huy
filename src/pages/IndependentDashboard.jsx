@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { CheckCircle2, ChevronRight, LayoutDashboard, Dumbbell, Utensils, MessageCircle, Settings, LogOut, ChevronDown, Upload, Camera, Loader2, PlaySquare, Target, Activity, Users2 } from "lucide-react";
+import { CheckCircle2, Dumbbell, Utensils, Upload, Camera, Loader2, PlaySquare, Target, Users2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function IndependentDashboard() {
