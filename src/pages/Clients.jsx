@@ -1,0 +1,320 @@
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { 
+  Plus, 
+  Search, 
+  Filter, 
+  Users,
+  Grid3X3,
+  List,
+  SlidersHorizontal,
+  Sheet
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import ClientCard from "@/components/clients/ClientCard";
+import ClientForm from "@/components/clients/ClientForm";
+import ClientDetailModal from "@/components/clients/ClientDetailModal";
+import TrainerClientOnboarding from "@/components/clients/TrainerClientOnboarding";
+import SessionForm from "@/components/sessions/SessionForm";
+import WorkoutForm from "@/components/workouts/WorkoutForm";
+import MealPlanForm from "@/components/meals/MealPlanForm";
+import GoogleSheetsImporter from "@/components/imports/GoogleSheetsImporter";
+import { cn } from "@/lib/utils";
+import EmptyState from "@/components/ui/empty-state";
+import SkeletonList from "@/components/ui/skeleton-list";
+
+export default function Clients() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [viewMode, setViewMode] = useState("grid");
+  const [showClientForm, setShowClientForm] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showSessionForm, setShowSessionForm] = useState(false);
+  const [showWorkoutForm, setShowWorkoutForm] = useState(false);
+  const [showMealPlanForm, setShowMealPlanForm] = useState(false);
+  const [showImporter, setShowImporter] = useState(false);
+  const [editingClient, setEditingClient] = useState(null);
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [detailClient, setDetailClient] = useState(null);
+  const [deleteClient, setDeleteClient] = useState(null);
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    base44.auth.me().then(setUser);
+  }, []);
+
+  const { data: clients = [], isLoading } = useQuery({
+    queryKey: ["clients", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      return base44.entities.Client.filter({ trainer_id: user.id }, "-created_date");
+    },
+    enabled: !!user,
+  });
+
+  const createClientMutation = useMutation({
+    mutationFn: (data) => base44.entities.Client.create(data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["clients"] }),
+  });
+
+  const updateClientMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Client.update(id, data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["clients"] }),
+  });
+
+  const deleteClientMutation = useMutation({
+    mutationFn: (id) => base44.entities.Client.delete(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["clients"] }),
+  });
+
+  const handleSubmitClient = async (data) => {
+    try {
+      if (editingClient) {
+        await updateClientMutation.mutateAsync({ id: editingClient.id, data });
+      } else {
+        await createClientMutation.mutateAsync(data);
+      }
+      setEditingClient(null);
+      setShowClientForm(false);
+    } catch (error) {
+      console.error("Client submission error:", error);
+      alert(error.message || "Failed to save client");
+    }
+  };
+
+  const handleDeleteClient = async () => {
+    if (deleteClient) {
+      await deleteClientMutation.mutateAsync(deleteClient.id);
+      setDeleteClient(null);
+    }
+  };
+
+  const handleCreateSession = async (data) => {
+    const selectedClient = clients.find(c => c.id === data.client_id);
+    await base44.entities.Session.create({ ...data, trainer_id: user?.id, client_name: selectedClient?.full_name || "" });
+    queryClient.invalidateQueries({ queryKey: ["sessions"] });
+  };
+
+  const handleCreateWorkout = async (data) => {
+    await base44.entities.WorkoutPlan.create({ ...data, trainer_id: user?.id });
+    queryClient.invalidateQueries({ queryKey: ["workouts"] });
+  };
+
+  const handleCreateMealPlan = async (data) => {
+    await base44.entities.MealPlan.create({ ...data, trainer_id: user?.id });
+    queryClient.invalidateQueries({ queryKey: ["mealplans"] });
+  };
+
+  const filteredClients = clients.filter(client => {
+    const matchesSearch = client.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      client.email?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === "all" || client.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Danh Sách Học Viên</h1>
+          <p className="text-muted-foreground mt-1">{clients.length} học viên đang theo học cùng bạn</p>
+        </div>
+        <div className="flex gap-3">
+          <Button 
+            onClick={() => { setEditingClient(null); setShowClientForm(true); }}
+            className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold shadow-lg shadow-emerald-500/25 rounded-xl px-5 py-2.5"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            + Thêm Học Viên Mới
+          </Button>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-col gap-3">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Tìm kiếm học viên theo tên, SĐT..."
+            className="pl-10 rounded-xl"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <div className="flex gap-2">
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="flex-1 sm:w-[180px] rounded-xl">
+              <Filter className="w-4 h-4 mr-2" />
+              <SelectValue placeholder="Trạng thái" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tất Cả Trạng Thái</SelectItem>
+              <SelectItem value="active">Đang Tập Luyện</SelectItem>
+              <SelectItem value="inactive">Đã Hoàn Thành</SelectItem>
+              <SelectItem value="paused">Tạm Dừng</SelectItem>
+            </SelectContent>
+          </Select>
+          <div className="flex bg-secondary border border-border rounded-lg p-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn("h-8 w-8 text-muted-foreground hover:text-foreground", viewMode === "grid" && "bg-secondary text-foreground shadow-sm")}
+              onClick={() => setViewMode("grid")}
+            >
+              <Grid3X3 className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn("h-8 w-8 text-muted-foreground hover:text-foreground", viewMode === "list" && "bg-secondary text-foreground shadow-sm")}
+              onClick={() => setViewMode("list")}
+            >
+              <List className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Client Grid/List */}
+      {isLoading ? (
+        <SkeletonList count={6} columns={3} avatar />
+      ) : filteredClients.length > 0 ? (
+        <div className={cn(
+          "grid gap-4",
+          viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
+        )}>
+          {filteredClients.map((client) => (
+            <ClientCard
+              key={client.id}
+              client={client}
+              onViewDetails={(c) => setDetailClient(c)}
+              onEdit={(c) => { setEditingClient(c); setShowClientForm(true); }}
+              onEditOnboarding={(c) => { setSelectedClient(c); setShowOnboarding(true); }}
+              onDelete={(c) => setDeleteClient(c)}
+              onSchedule={(c) => { setSelectedClient(c); setShowSessionForm(true); }}
+              onWorkout={(c) => { setSelectedClient(c); setShowWorkoutForm(true); }}
+              onMealPlan={(c) => { setSelectedClient(c); setShowMealPlanForm(true); }}
+            />
+          ))}
+        </div>
+      ) : (
+        <EmptyState
+          icon={Users}
+          filtered={!!searchQuery || statusFilter !== "all"}
+          onClearFilters={() => { setSearchQuery(""); setStatusFilter("all"); }}
+          title="Chưa có học viên nào"
+          description="Thêm học viên mới để bắt đầu quản lý giáo án tập, thực đơn ăn và xuất PDF."
+          actionLabel="+ Thêm Học Viên Ngay"
+          onAction={() => setShowClientForm(true)}
+          hints={[
+            "Bấm '+ Thêm Học Viên Ngay' để lưu họ tên, SĐT và mục tiêu của học viên.",
+            "Bạn có thể tạo Giáo Án Tập hoặc Thực Đơn Ăn và bấm 'Xuất PDF' để gửi file qua Zalo cho học viên.",
+            "Học viên không cần tạo tài khoản hay đăng nhập rườm rà.",
+          ]}
+        />
+      )}
+
+      {/* Forms & Modals */}
+      <ClientDetailModal
+        open={!!detailClient}
+        onOpenChange={(open) => !open && setDetailClient(null)}
+        client={detailClient}
+        onEdit={(c) => {
+          setDetailClient(null);
+          setEditingClient(c);
+          setShowClientForm(true);
+        }}
+        onViewWorkouts={(c) => navigate(createPageUrl("Workouts") + "?client_id=" + c.id)}
+        onViewMeals={(c) => navigate(createPageUrl("Meals") + "?client_id=" + c.id)}
+      />
+
+      <TrainerClientOnboarding
+        open={showOnboarding}
+        onOpenChange={setShowOnboarding}
+        client={selectedClient}
+        onSubmit={handleSubmitClient}
+      />
+
+      <ClientForm
+        open={showClientForm}
+        onOpenChange={setShowClientForm}
+        client={editingClient}
+        onSubmit={handleSubmitClient}
+      />
+
+      <SessionForm
+        open={showSessionForm}
+        onOpenChange={(open) => { setShowSessionForm(open); if (!open) setSelectedClient(null); }}
+        session={selectedClient ? { client_id: selectedClient.id } : null}
+        clients={clients}
+        onSubmit={handleCreateSession}
+      />
+
+      <WorkoutForm
+        open={showWorkoutForm}
+        onOpenChange={(open) => { setShowWorkoutForm(open); if (!open) setSelectedClient(null); }}
+        workout={selectedClient ? { client_id: selectedClient.id } : null}
+        clients={clients}
+        onSubmit={handleCreateWorkout}
+      />
+
+      <MealPlanForm
+        open={showMealPlanForm}
+        onOpenChange={(open) => { setShowMealPlanForm(open); if (!open) setSelectedClient(null); }}
+        plan={selectedClient ? { client_id: selectedClient.id } : null}
+        clients={clients}
+        onSubmit={handleCreateMealPlan}
+      />
+
+      <GoogleSheetsImporter
+        open={showImporter}
+        onOpenChange={setShowImporter}
+        onImported={() => queryClient.invalidateQueries({ queryKey: ["clients"] })}
+      />
+
+      {/* Delete Confirmation */}
+      {/* Delete Confirmation */}
+      <AlertDialog open={!!deleteClient} onOpenChange={() => setDeleteClient(null)}>
+        <AlertDialogContent className="bg-card border-border text-foreground">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Xóa Học Viên</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground">
+              Bạn có chắc chắn muốn xóa học viên {deleteClient?.full_name}? Thao tác này không thể hoàn tác.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-border text-foreground hover:bg-accent">Hủy</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteClient} className="bg-red-600 hover:bg-red-700 text-white font-bold">
+              Xóa
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}
